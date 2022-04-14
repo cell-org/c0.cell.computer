@@ -95,14 +95,8 @@ header h3 {
   margin: 0;
 }
 #info {
-  margin: 20px auto;
   padding: 50px;
-  max-width: 800px;
-  width: 100%;
   font-size: 14px;
-  /*
-  border: 2px solid lavender;
-  */
   color: rgba(255,255,255,0.9);
 }
 .btn {

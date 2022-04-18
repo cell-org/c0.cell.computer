@@ -591,7 +591,7 @@ const code0_template = Handlebars.compile(source0);
 document.addEventListener("DOMContentLoaded", async () => {
   const web3 = new Web3(window.ethereum);
   const chainId = await web3.eth.getChainId()
-  const network = (chainId === 4 ? "rinkeby" : "mainnet")
+  const network = (chainId === 4 ? "rinkeby" : "ethereum")
   document.querySelector(".network").innerHTML = network
   const factory = Config[network]
   const c0 = new C0()

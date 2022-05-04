@@ -14,34 +14,12 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" rel="stylesheet">
 <link href="/style.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.1/web3.min.js"></script>
-<script src="https://unpkg.com/c0js/dist/c0.js"></script>
-<script src="/config.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
   const web3 = new Web3(window.ethereum);
-  try {
-    const chainId = await web3.eth.getChainId()
-    const network = (chainId === 4 ? "rinkeby" : "ethereum")
-    document.querySelector(".network").innerHTML = network
-    const factory = Config[network]
-    const c0 = new C0()
-    await c0.init({ web3, });
-    let implementation = await c0.collection.methods(factory).implementation().call()
-    let collections = await c0.collection.find({
-      factory,
-      implementation,
-      creator: c0.account,
-      start: 0,
-      count: 100
-    })
-    console.log("collections", collections)
-    const header = `<div class='row top'><i class="fa-solid fa-folder-open"></i> / ${chainId} / ${c0.account}</div>`
-    document.querySelector(".container").innerHTML = header + collections.map((collection, i) => {
-      return `<a class='row indent' href="/contract#${i}"><i class="fa-solid fa-folder-open"></i> ${collection}</a>`
-    }).join("")
-  } catch (e) {
-    document.querySelector(".container").innerHTML = `<div class='error'><h1>Error</h1>${e.message}</div>`
-  }
+  const chainId = await web3.eth.getChainId()
+  const network = (chainId === 4 ? "rinkeby" : "ethereum")
+  document.querySelector(".network").innerHTML = network
 })
 </script>
 </head>
@@ -49,13 +27,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 <nav>
   <a href="/"><img class='logo' src='/cell_icon.png'></a>
   <div class='flexible'></div>
-  <a class='block' href="/settings">
-    <span class='network'></span>
-    <!--
-    <img id='user'>
-    -->
-  </a>
+  <span class='block network'></span>
 </nav>
-<div class='container'></div>
+<div class='container'>
+  <a class="row indent" href="/v0">new (v0)</a>
+  <a class="row indent" href="/old">old</a>
+</div>
 </body>
 </html>

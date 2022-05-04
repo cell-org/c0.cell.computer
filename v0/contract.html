@@ -1,0 +1,145 @@
+<html>
+<head>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/base16/rebecca.min.css" rel="stylesheet">
+<link href="/style.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.1/web3.min.js"></script>
+<script src="https://unpkg.com/c0js@0.1.1/dist/c0.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+<script src="config.js"></script>
+<script src="/chains.js"></script>
+<script id="empty-template" type="text/x-handlebars-template">
+<div class='form'>
+<h1>Deploy Contract</h1>
+<div>
+  <div>Get started by deploying this contract.</div>
+  <br>
+  <form id='deploy'>
+    <input class='input-field' id='name' type='text' placeholder='name'>
+    <input class='input-field' id='symbol' type='text' placeholder='symbol'>
+    <input id='submit' type='submit' class='btn' value='deploy'>
+    <div class='loading hidden'>
+      <img class='rotate' src='/cell_icon.png'> loading...
+    </div>
+  </form>
+</div>
+</div>
+</script>
+<script>
+const index = parseInt(location.hash.slice(1))
+const source1 = document.getElementById("empty-template").innerHTML;
+const empty_template = Handlebars.compile(source1);
+document.addEventListener("DOMContentLoaded", async () => {
+  const web3 = new Web3(window.ethereum);
+  const chainId = await web3.eth.getChainId()
+  let network;
+  for(let chain of chains) {
+    if (chain.chainId === chainId) {
+      network = chain.name
+    }
+  }
+  document.querySelector(".network").innerHTML = network
+  const factory = Config.factory
+  const c0 = new C0()
+  await c0.init({ web3, });
+  let implementation = await c0.collection.methods(factory).implementation().call()
+  const addresses = await c0.collection.find({
+    factory,
+    implementation,
+    creator: c0.account,
+    start: index,
+    count: 1
+  })
+  const address = addresses[0]
+  let domain = ""
+  let domainLine = ""
+  try {
+    const methods = c0.token.methods(address)
+    let name = await methods.name().call()
+    let symbol = await methods.symbol().call()
+    let chainId = await web3.eth.getChainId()
+    domain = JSON.stringify({
+      address,
+      chainId,
+      name
+    }, null, 2)
+    domainLine = JSON.stringify({
+      address,
+      chainId,
+      name
+    })
+    document.querySelector("header").innerHTML = `<h3><i class="fa-solid fa-folder-open"></i> ${address}</h3>
+  <h4>${name} (${symbol})</h4>
+<br>
+<div class='section'>
+<h4>domain</h4>
+<pre class='code'>${domain}</pre></div>`
+  } catch (e) {
+    let name = "(contract name)"
+    let symbol = "(contract symbol)"
+    let chainId = await web3.eth.getChainId()
+    domain = JSON.stringify({
+      address,
+      chainId,
+      name
+    }, null, 2)
+    domainLine = JSON.stringify({
+      address,
+      chainId,
+      name
+    })
+    console.log("domainLine", domainLine)
+    document.querySelector("header").innerHTML = `<h3><i class="fa-solid fa-folder-open"></i> ${address}</h3>${empty_template()}`
+    document.querySelector("form#deploy").addEventListener("submit", async (e) => {
+      e.preventDefault()
+      e.stopPropagation()
+      let name = document.querySelector("#name").value 
+      let symbol = document.querySelector("#symbol").value 
+      if (name.length === 0) {
+        alert("name must not be empty")
+        return
+      }
+      if (name.length === 0) {
+        alert("symbol must not be empty")
+        return
+      }
+      document.querySelector(".loading").classList.remove("hidden")
+      document.querySelector("#submit").classList.add("hidden")
+      let tx = await c0.collection.create({
+        factory,
+        index,
+        name,
+        symbol
+      })
+      console.log("tx", tx)
+      location.reload()
+    })
+  }
+  if (Config.private) {
+    let info = await fetch("/privateclub").then((r) => { return r.json() })
+    let tokenURI = info.tokenURI
+    let metadata = await fetch("https://ipfs.io/ipfs/" + info.tokenURI.replace("ipfs://", "")).then((r) => {
+      return r.json()
+    })
+    document.querySelector("#user").src = "https://ipfs.io/ipfs/" + metadata.image.replace("ipfs://", "")
+  }
+  hljs.highlightAll();
+})
+</script>
+</head>
+<body>
+<nav>
+  <a href="/"><img class='logo' src='/cell_icon.png'></a>
+  <div class='flexible'></div>
+  <span class='block network'></span>
+</nav>
+<div class='container'>
+  <header></header>
+  <div id='info'>
+    <h1>Get Started</h1>
+    <a target="_blank" href="https://tutorial.cell.computer">Check out the Cell tutorial</a>
+  </div>
+</div>
+</body>
+</html>

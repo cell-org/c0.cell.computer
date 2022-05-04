@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'visitor';
+  src:  url('visitor2-webfont.woff2') format('woff2'),
+        url('visitor2-webfont.woff') format('woff');
+}
 body {
   margin: 0;
   font-family: Sans-serif;
@@ -10,7 +15,7 @@ nav {
   padding: 10px;
   align-items: center;
 }
-nav a {
+nav a, nav span {
   display: block;
   /*
   color: rgba(0,0,0,0.9);
@@ -24,9 +29,15 @@ nav a {
   flex-grow: 1;
 }
 nav img {
-  height: 30px;
+  height: 25px;
   vertical-align: middle;
   display: inline-block;
+}
+nav .network {
+  font-family: Menlo, monaco, monospace;
+  font-size: 12px;
+  color: cornflowerblue;
+  font-weight: bold;
 }
 #user {
   border: 1px solid white;
@@ -59,12 +70,18 @@ h1, h3 {
   color: rgba(0,0,0,0.7);
   */
   color: rgba(255,255,255,0.9);
-  display: block;
+  display:flex;
   text-decoration: none;
-  padding: 10px;
+  padding: 10px 20px;
   font-size: 12px;
   font-family: Menlo, monaco, monospace;
   letter-spacing: 0px;
+}
+.row i {
+  margin-right: 5px;
+}
+.row .name {
+  margin-left: 10px;
 }
 pre {
   font-family: Menlo, monaco, monospace;
@@ -232,3 +249,9 @@ ol {
 .error h1 {
   color: white;
 }
+/*
+.logo {
+  font-family: visitor;  
+  font-size: 40px;
+}
+*/

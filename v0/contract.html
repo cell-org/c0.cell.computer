@@ -1,11 +1,11 @@
 <html>
 <head>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/base16/rebecca.min.css" rel="stylesheet">
 <link href="/style.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.1/web3.min.js"></script>
-<script src="https://unpkg.com/c0js@0.1.1/dist/c0.js"></script>
+<script src="https://unpkg.com/c0js/dist/c0.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
 <script src="config.js"></script>
 <script src="/chains.js"></script>
@@ -27,22 +27,45 @@
 </div>
 </script>
 <script>
-const index = parseInt(location.hash.slice(1))
+let u;
+let chainIdPath;
+let index;
+const refresh = () => {
+  if (location.hash && location.hash.length > 0) {
+    u = location.hash.slice(1)
+    console.log("u", u)
+    let chunks = u.split(".")
+    console.log("chunks", chunks)
+    if (chunks.length === 2) {
+      chainIdPath = chunks[0]  
+      index = parseInt(chunks[1])
+    } else {
+      document.querySelector(".container").innerHTML = `<div class='error'><h1>Error</h1>Invalid path ${u}</div>`
+    }
+  }
+}
+console.log("chainIdPath", chainIdPath)
 const source1 = document.getElementById("empty-template").innerHTML;
 const empty_template = Handlebars.compile(source1);
 document.addEventListener("DOMContentLoaded", async () => {
+  refresh()
   const web3 = new Web3(window.ethereum);
   const chainId = await web3.eth.getChainId()
   let network;
   for(let chain of chains) {
-    if (chain.chainId === chainId) {
+    if (parseInt(chain.chainId) === parseInt(chainIdPath)) {
       network = chain.name
     }
   }
-  document.querySelector(".network").innerHTML = network
+  document.querySelector(".title").innerHTML = `C0 ${network}`
   const factory = Config.factory
   const c0 = new C0()
-  await c0.init({ web3, });
+  try {
+    await c0.init({ web3, chain: chainIdPath });
+  } catch (e) {
+    document.querySelector(".container").innerHTML = `<div class='error'><h1>Error</h1>${e.message}</div>`
+    return;
+  }
   let implementation = await c0.collection.methods(factory).implementation().call()
   const addresses = await c0.collection.find({
     factory,
@@ -69,8 +92,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       chainId,
       name
     })
+    let url = Config.explorers[chainIdPath].replace("{address}", address)
     document.querySelector("header").innerHTML = `<h3><i class="fa-solid fa-folder-open"></i> ${address}</h3>
-  <h4>${name} (${symbol})</h4>
+  <h4>${name} (${symbol})&nbsp;&nbsp;<a target="_blank" href="${url}"><i class="fa-solid fa-arrow-up-right-from-square"></i></a></h4>
 <br>
 <div class='section'>
 <h4>domain</h4>
@@ -130,15 +154,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 </head>
 <body>
 <nav>
-  <a href="/"><img class='logo' src='/cell_icon.png'></a>
-  <div class='flexible'></div>
-  <span class='block network'></span>
+  <a class='logo' href="/">
+    <img src='/cell_icon.png'> <span class='title'>C0</span>
+  </a>
 </nav>
 <div class='container'>
   <header></header>
   <div id='info'>
     <h1>Get Started</h1>
-    <a target="_blank" href="https://tutorial.cell.computer">Check out the Cell tutorial</a>
+    <blockquote>
+    <ol>
+    <li>
+      <a class='l' target="_blank" href="https://intro.cell.computer">Learn how Cell works</a>
+    </li>
+    <li>
+      <a class='l' target="_blank" href="https://tutorial.cell.computer">Quickstart Tutorial</a>
+    </li>
+    </ol>
+    </blockquote>
   </div>
 </div>
 </body>

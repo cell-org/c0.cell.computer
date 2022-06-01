@@ -1,7 +1,7 @@
 const Config = {
-  //rinkeby: "0xdAdD5cde9cC0549E4349E471F69234326932eA44",
-  //"factory": "0xd495Ff66cC22E98A6B89E7bFB71FAdB70Fb6C2f3"
-//  ethereum: "0x468342E4dECa1B34b3a1524E23e7f97fC31eE402",
-  //"factory": "0xf3Bc284C73d5C110546ae25a965ba095F156c395"
-  "factory": "0x2968d4517531Abb655AB19731014d7b56cd3e61d"
+  factory: "0x99Ba4B0aA5dD3fa399Ce04aCa79459AcE1c0460c",
+  explorers: {
+    "1": "https://etherscan.io/address/{address}",
+    "4": "https://rinkeby.etherscan.io/address/{address}"
+  }
 }

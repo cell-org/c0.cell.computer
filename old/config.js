@@ -1,4 +1,0 @@
-const Config = {
-  rinkeby: "0xbAfC33dDC111D11b2CDC2dA0004B5514E92Aa4E4",
-  ethereum: "0x468342E4dECa1B34b3a1524E23e7f97fC31eE402",
-}

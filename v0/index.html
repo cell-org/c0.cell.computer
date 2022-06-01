@@ -11,28 +11,38 @@
 <meta property="og:title" content="Cell" />
 <meta property="og:description" content="Universal NFT Protocol" />
 <meta property="og:image" content="https://c0.cell.computer/c0.png" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
 <link href="/style.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.1/web3.min.js"></script>
-<script src="https://unpkg.com/c0js@0.1.1/dist/c0.js"></script>
+<script src="https://unpkg.com/c0js/dist/c0.js"></script>
 <script src="config.js"></script>
 <script src="/chains.js"></script>
 <script>
+let u;
+let chainIdPath;
+if (location.hash && location.hash.length > 0) {
+  u = location.hash.slice(1)
+  let chunks = u.split(".")
+  if (chunks > 0) {
+    chainIdPath = chunks[0]  
+  }
+}
+console.log("chainIdPath", chainIdPath)
 document.addEventListener("DOMContentLoaded", async () => {
   const web3 = new Web3(window.ethereum);
   try {
     const chainId = await web3.eth.getChainId()
     let network;
     for(let chain of chains) {
-      if (chain.chainId === chainId) {
+      if (parseInt(chain.chainId) === parseInt(chainIdPath)) {
         network = chain.name
       }
     }
-    document.querySelector(".network").innerHTML = network
+    document.querySelector(".title").innerHTML = `C0 ${network}`
     const factory = Config.factory
     console.log("factory", factory)
     const c0 = new C0()
-    await c0.init({ web3, });
+    await c0.init({ web3, chain: chainIdPath });
     let implementation = await c0.collection.methods(factory).implementation().call()
     console.log("IMPlementation", implementation)
     let collections = await c0.collection.find({
@@ -44,7 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     })
     const header = `<div class='row top'><i class="fa-solid fa-folder-open"></i> / ${chainId} / ${c0.account}</div>`
     document.querySelector(".container").innerHTML = header + collections.map((collection, i) => {
-      return `<a class='row indent' href="contract#${i}"><i class="fa-solid fa-folder-open"></i> ${collection} <div class='name'></div></a>`
+      return `<a class='row indent' href="contract#${chainIdPath}.${i}"><i class="fa-solid fa-folder-open"></i> ${collection} <div class='name'></div></a>`
     }).join("")
 
 
@@ -53,6 +63,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       try {
         let name = await c0.token.methods(collection).name().call()
         document.querySelector(".row:nth-child(" + (i+2) + ") .name").innerHTML = "[" + name + "]"
+        document.querySelector(".row:nth-child(" + (i+2) + ")").classList.add("active")
       } catch (e) {
         console.log("break")
         break;
@@ -67,9 +78,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 </head>
 <body>
 <nav>
-  <a href="/"><img class='logo' src='/cell_icon.png'></a>
-  <div class='flexible'></div>
-  <span class='block network'></span>
+  <a class='logo' href="/">
+    <img src='/cell_icon.png'> <span class='title'>C0</span>
+  </a>
 </nav>
 <div class='container'></div>
 </body>

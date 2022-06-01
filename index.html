@@ -11,32 +11,33 @@
 <meta property="og:title" content="Cell" />
 <meta property="og:description" content="Universal NFT Protocol" />
 <meta property="og:image" content="https://c0.cell.computer/c0.png" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
 <link href="/style.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.1/web3.min.js"></script>
 <script>
-document.addEventListener("DOMContentLoaded", async () => {
-  const web3 = new Web3(window.ethereum);
-  const chainId = await web3.eth.getChainId()
-  const network = (chainId === 4 ? "rinkeby" : "ethereum")
-  document.querySelector(".network").innerHTML = network
-})
+/********************************************************************************************
+*
+*   URL structure
+*     - home: https://c0.cell.computer
+*     - directory: https://c0.cell.computer/v0#<chainId>
+*       - https://c0.cell.computer/v0#4 => rinkeby
+*       - https://c0.cell.computer/v0#1 => eth mainnet
+*     - contract dashboard: https://c0.cell.computer/v0/contract#<chainId>.<index>
+*       - https://c0.cell.computer/v0/contract#1.0 => mainnet index 0
+*       - https://c0.cell.computer/v0/contract#4.1 => rinkeby index 1
+*
+********************************************************************************************/
 </script>
 </head>
 <body>
 <nav>
-  <a href="/"><img class='logo' src='/cell_icon.png'></a>
-  <div class='flexible'></div>
-  <span class='block network'></span>
+  <a class='logo' href="/">
+    <img src='/cell_icon.png'> <span class='title'>C0</span>
+  </a>
 </nav>
 <div class='container'>
-  <div class='row indent'><i class="fa-solid fa-triangle-exclamation"></i>&nbsp;cell is currently in beta and on rinkeby only. the beta contracts may be removed from the dashboard once we launch to mainnet.</div>
-  <a class="row indent" href="/v2">v2</a>
-  <a class="row indent" href="/v1">v1 (deprecated)</a>
-  <!--
-  <a class="row indent" href="/v0">old (v0)</a>
-  <a class="row indent" href="/old">older</a>
-  -->
+  <a class="row indent" href="/v0#1">Ethereum</a>
+  <a class="row indent" href="/v0#4">Rinkeby</a>
 </div>
 </body>
 </html>

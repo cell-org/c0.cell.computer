@@ -15,29 +15,41 @@ nav {
   padding: 10px;
   align-items: center;
 }
-nav a, nav span {
-  display: block;
-  /*
-  color: rgba(0,0,0,0.9);
-  */
+nav a {
   color: white;
   text-decoration: none;
-  opacity: 0.8;
   font-size: 16px;
 }
 .flexible {
   flex-grow: 1;
 }
-nav img {
-  height: 25px;
+.logo img {
+  width: 30px;
   vertical-align: middle;
   display: inline-block;
 }
+.logo {
+  font-family: Menlo, monaco, monospace;
+  font-weight: bold;
+  font-size: 14px;
+  color: white;
+  text-transform: uppercase;
+}
 nav .network {
   font-family: Menlo, monaco, monospace;
-  font-size: 12px;
-  color: cornflowerblue;
+  font-size: 14px;
+  /*
+  font-size: 30px;
+  font-family: visitor;
+  */
+  color: white;
+  padding: 0 10px;
+  /*
+  display: block;
+  */
+  display: inline-block;
   font-weight: bold;
+  text-transform: uppercase;
 }
 #user {
   border: 1px solid white;
@@ -53,29 +65,37 @@ img {
   width: 100%;
 }
 li {
-  margin: 5px 0;
+  margin: 10px 0;
 }
 b {
   color: #6562a8;
 }
 h3 {
-  font-size: 40px;
+  font-family: Menlo, monaco, monospace;
 }
 h1, h3 {
   letter-spacing: -1px;
   margin: 0 0 20px;
 }
+h1 {
+  font-size: 40px;
+  letter-spacing: 0px;
+  font-family: visitor;
+}
 .row {
 /*
   color: rgba(0,0,0,0.7);
   */
-  color: rgba(255,255,255,0.9);
+  color: rgba(255,255,255,0.7);
   display:flex;
   text-decoration: none;
   padding: 10px 20px;
   font-size: 12px;
   font-family: Menlo, monaco, monospace;
   letter-spacing: 0px;
+}
+.row.active {
+  color: yellowgreen;
 }
 .row i {
   margin-right: 5px;
@@ -96,7 +116,7 @@ header {
   background: rgba(57, 67, 183, 0.05);
 }
 header h3 {
-  font-size: 20px;
+  font-size: 15px;
 /*
   color: rgba(0,0,0,0.7);
   */
@@ -154,8 +174,11 @@ header h3 {
 blockquote {
   padding: 20px;
   box-sizing: border-box;
+  /*
   background: rgba(255,255,255,0.04);
-  border-left: 2px solid yellow;
+  */
+  background: rgba(154,205,50,0.04);
+  border-left: 2px solid yellowgreen;
   margin: 10px 0;
   font-size: 14px;
   opacity: 0.8;
@@ -215,6 +238,7 @@ h4 {
   margin: 0;
   color: cornflowerblue;
   font-size: 20px;
+  letter-spacing: -1px;
 }
 blockquote h4 {
   color: yellow;
@@ -255,3 +279,8 @@ ol {
   font-size: 40px;
 }
 */
+.l {
+  font-weight: bold;
+  color: yellowgreen;
+  text-transform: uppercase;
+}
